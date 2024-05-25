@@ -40,9 +40,16 @@
               <div class="invalid-feedback" id="invalid-email"></div>
             </div>
             <div class="form-floating mb-3">
-              <input required type="text" class="form-control" id="password" name="password" placeholder="">
-              <label for="password">Email address</label>
+              <input required type="password" class="form-control" id="password" name="password" placeholder="">
+              <label for="password">Password</label>
             </div>
+            <div class="mb-3">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+              <label class="form-check-label" for="flexCheckChecked">
+                Remember me
+              </label>
+            </div>
+
 
             <button type="submit" class="btn btn-primary float-end">Login</button>
           </form>

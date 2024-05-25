@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet(name = "LoginServlet", value = "/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "EditEmailServlet", value = "/EditEmailServlet")
+public class EditEmailServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -20,21 +20,21 @@ public class LoginServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String email = request.getParameter("email");
+    HttpSession session = request.getSession();
+    String newEmail = request.getParameter("email");
+    String oldEmail = (String) session.getAttribute("email");
     String password = request.getParameter("password");
-    System.out.println(email);
-    System.out.println(password);
     UserDAO userDAO = new UserDAO();
-    System.out.println(userDAO.checkLogin(email, password));
-    if (!userDAO.checkLogin(email, password)) {
-      request.setAttribute("error", "Email and/or password incorrect!");
-      RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
+    if (!userDAO.checkLogin(oldEmail, password)) {
+      request.setAttribute("error", "Password incorrect!");
+      RequestDispatcher dispatcher = request.getRequestDispatcher("EditAccount.jsp");
       dispatcher.forward(request, response);
       return;
     }
-    HttpSession session = request.getSession();
-    session.setAttribute("email", email);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("ManageCompetency.jsp");
+    userDAO.editEmail(oldEmail, newEmail);
+    session.setAttribute("email", newEmail);
+    request.setAttribute("success", "Email changed successfully");
+    RequestDispatcher dispatcher = request.getRequestDispatcher("EditAccount.jsp");
     dispatcher.forward(request, response);
   }
 }

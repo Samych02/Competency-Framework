@@ -1,6 +1,8 @@
 package esi.competencyframework.servlet;
 
+import esi.competencyframework.dao.CategoryDAO;
 import esi.competencyframework.dao.CompetencyDAO;
+import esi.competencyframework.model.Category;
 import esi.competencyframework.model.Competency;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -30,11 +32,14 @@ public class EditCompetencyServlet extends HttpServlet {
       RequestDispatcher dispatcher = request.getRequestDispatcher("EditCompetency.jsp");
       dispatcher.forward(request, response);
     } else {
-      Competency competency = new Competency(Integer.parseInt(request.getParameter("id")), request.getParameter("name"), request.getParameter("description"), request.getParameter("domain"), request.getParameter("level"));
+      int categoryID = Integer.parseInt(request.getParameter("category"));
+      CategoryDAO categoryDAO = new CategoryDAO();
+      Category category = categoryDAO.getCategoryById(categoryID);
+      Competency competency = new Competency(Integer.parseInt(request.getParameter("id")), request.getParameter("name"), request.getParameter("description"), request.getParameter("domain"), request.getParameter("level"), category);
       CompetencyDAO competencyDAO = new CompetencyDAO();
       competencyDAO.editCompetency(competency);
       request.setAttribute("success", "The competency has been edited successfully!");
-      RequestDispatcher dispatcher = request.getRequestDispatcher("CompetencyCRUD.jsp");
+      RequestDispatcher dispatcher = request.getRequestDispatcher("ManageCompetency.jsp");
       dispatcher.forward(request, response);
     }
   }

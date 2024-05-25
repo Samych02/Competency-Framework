@@ -2,7 +2,6 @@ package esi.competencyframework.servlet;
 
 import esi.competencyframework.dao.UserDAO;
 import esi.competencyframework.model.User;
-import esi.competencyframework.utils.PBKDF2Hashing;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,7 +24,7 @@ public class RegisterUserServlet extends HttpServlet {
     String firstName = request.getParameter("fname");
     String lastName = request.getParameter("lname");
     String email = request.getParameter("email");
-    String password = PBKDF2Hashing.hashPassword(request.getParameter("password1"));
+    String password = request.getParameter("password1");
     UserDAO userDAO = new UserDAO();
     if (userDAO.checkIfEmailExists(email)) {
       request.setAttribute("error", "Email already exists!");

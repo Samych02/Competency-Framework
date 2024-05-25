@@ -1,6 +1,7 @@
 package esi.competencyframework.servlet;
 
-import esi.competencyframework.dao.CompetencyDAO;
+import esi.competencyframework.dao.CategoryDAO;
+import esi.competencyframework.model.Category;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,21 +12,24 @@ import lombok.SneakyThrows;
 
 import java.io.IOException;
 
-@WebServlet(name = "DeleteCompetencyServlet", value = "/DeleteCompetencyServlet")
-public class DeleteCompetencyServlet extends HttpServlet {
+@WebServlet(name = "AddCategoryServlet", value = "/AddCategoryServlet")
+public class AddCategoryServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
   }
 
   @SneakyThrows
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    int id = Integer.parseInt(request.getParameter("delete"));
-    CompetencyDAO competencyDAO = new CompetencyDAO();
-    competencyDAO.removeCompetency(id);
-    request.setAttribute("success", "The competency has been deleted successfully!");
-    RequestDispatcher dispatcher = request.getRequestDispatcher("ManageCompetency.jsp");
+    String name = request.getParameter("name");
+    Category category = new Category(name);
+
+
+    CategoryDAO categoryDAO = new CategoryDAO();
+    categoryDAO.addCategory(category);
+    request.setAttribute("success", "The category has been added successfully!");
+
+    RequestDispatcher dispatcher = request.getRequestDispatcher("ManageCategory.jsp");
     dispatcher.forward(request, response);
   }
 }

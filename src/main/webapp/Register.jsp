@@ -31,8 +31,7 @@
       <div class="card">
         <h2 class="text-center mt-1">Register</h2>
         <div class="card-body">
-          <form action="${pageContext.request.contextPath}/RegisterUserServlet" method="post" class="needs-validation"
-                novalidate>
+          <form action="${pageContext.request.contextPath}/RegisterUserServlet" method="post" class="needs-validation">
             <div class="row">
               <div class="col-md-6">
                 <div class="form-floating mb-3">
@@ -74,7 +73,7 @@
                 </div>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary float-end">Register</button>
+            <button type="submit" class="btn btn-primary float-end" id="button">Register</button>
           </form>
         </div>
       </div>

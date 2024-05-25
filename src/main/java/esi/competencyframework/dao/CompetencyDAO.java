@@ -2,28 +2,26 @@ package esi.competencyframework.dao;
 
 import esi.competencyframework.model.Competency;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CompetencyDAO {
-  private Connection getConnection() throws SQLException, ClassNotFoundException {
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    String url = "jdbc:mysql://localhost:3306/competency_framework";
-    String username = "root";
-    String password = "";
-    return DriverManager.getConnection(url, username, password);
-  }
+public class CompetencyDAO extends DAO {
 
   public void addCompetency(Competency competency) throws SQLException, ClassNotFoundException {
     Connection connection = getConnection();
-    final String query = "INSERT INTO Competencies (name, description, domain, level) VALUES ( ?, ?, ?, ?)";
+    final String query = "INSERT INTO Competencies (name, description, domain, level, category_id) VALUES ( ?, ?, ?, ?, ?)";
     PreparedStatement ps = connection.prepareStatement(query);
     ps.setString(1, competency.getName());
     ps.setString(2, competency.getDescription());
     ps.setString(3, competency.getDomain());
     ps.setString(4, competency.getLevel());
+    ps.setInt(5, competency.getCategory().getId());
+    ps.executeUpdate();
   }
 
   public Competency getCompetencyByID(int id) throws SQLException, ClassNotFoundException {
@@ -39,6 +37,7 @@ public class CompetencyDAO {
       competency.setDescription(rs.getString("description"));
       competency.setDomain(rs.getString("domain"));
       competency.setLevel(rs.getString("level"));
+      competency.setCategory(new CategoryDAO().getCategoryById(rs.getInt("category_id")));
       return competency;
     }
     return null;
@@ -57,6 +56,7 @@ public class CompetencyDAO {
       competency.setDescription(rs.getString("description"));
       competency.setDomain(rs.getString("domain"));
       competency.setLevel(rs.getString("level"));
+      competency.setCategory(new CategoryDAO().getCategoryById(rs.getInt("category_id")));
       competenciesList.add(competency);
     }
     return competenciesList;
@@ -72,12 +72,14 @@ public class CompetencyDAO {
 
   public void editCompetency(Competency competency) throws SQLException, ClassNotFoundException {
     Connection connection = getConnection();
-    final String query = "UPDATE Competencies SET name = ?, description = ?, domain = ?, level = ? WHERE id = ?";
+    final String query = "UPDATE Competencies SET name = ?, description = ?, domain = ?, level = ?, category_id = ? WHERE id = ?";
     PreparedStatement ps = connection.prepareStatement(query);
     ps.setString(1, competency.getName());
     ps.setString(2, competency.getDescription());
     ps.setString(3, competency.getDomain());
     ps.setString(4, competency.getLevel());
-    ps.setInt(5, competency.getId());
+    ps.setInt(5, competency.getCategory().getId());
+    ps.setInt(6, competency.getId());
+    ps.executeUpdate();
   }
 }

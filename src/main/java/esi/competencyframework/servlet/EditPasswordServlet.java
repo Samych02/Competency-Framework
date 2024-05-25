@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet(name = "LoginServlet", value = "/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "EditPasswordServlet", value = "/EditPasswordServlet")
+public class EditPasswordServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -20,21 +20,20 @@ public class LoginServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String email = request.getParameter("email");
-    String password = request.getParameter("password");
-    System.out.println(email);
-    System.out.println(password);
+    HttpSession session = request.getSession();
+    String email = (String) session.getAttribute("email");
+    String opassword = request.getParameter("opassword");
+    String npassword = request.getParameter("npassword");
     UserDAO userDAO = new UserDAO();
-    System.out.println(userDAO.checkLogin(email, password));
-    if (!userDAO.checkLogin(email, password)) {
-      request.setAttribute("error", "Email and/or password incorrect!");
-      RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
+    if (!userDAO.checkLogin(email, opassword)) {
+      request.setAttribute("error", "Old password incorrect!");
+      RequestDispatcher dispatcher = request.getRequestDispatcher("EditAccount.jsp");
       dispatcher.forward(request, response);
       return;
     }
-    HttpSession session = request.getSession();
-    session.setAttribute("email", email);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("ManageCompetency.jsp");
+    userDAO.editPassword(email, npassword);
+    request.setAttribute("success", "Password changed successfully");
+    RequestDispatcher dispatcher = request.getRequestDispatcher("EditAccount.jsp");
     dispatcher.forward(request, response);
   }
 }

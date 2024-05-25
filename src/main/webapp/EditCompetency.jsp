@@ -1,5 +1,8 @@
-<%@ page import="ma.ac.esi.competencyframework.model.Competency" %>
-<%@ page import="ma.ac.esi.competencyframework.model.Competency" %>
+<%@ page import="esi.competencyframework.model.Competency" %>
+<%@ page import="esi.competencyframework.model.Competency" %>
+<%@ page import="esi.competencyframework.model.Category" %>
+<%@ page import="java.util.List" %>
+<%@ page import="esi.competencyframework.dao.CategoryDAO" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +12,31 @@
   <title>Edit a competency</title>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="ManageCompetency.jsp">Manage Competencies</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="ManageCategory.jsp">Manage Categories</a>
+      </li>
+    </ul>
+    <div class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        My account
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="EditAccount.jsp">Edit info</a></li>
+        <li>
+          <form action="${pageContext.request.contextPath}/LogoutServlet" method="post">
+            <button class="dropdown-item submit">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6">
@@ -49,6 +77,23 @@
               </select>
               <label for="level">Level</label>
               <div class="invalid-feedback" id="invalid-level"></div>
+            </div>
+            <div class="form-floating mb-3">
+              <select class="form-select" id="category" name="category" required>
+                <option value="" disabled selected>Select a level</option>
+                <% CategoryDAO categoryDAO = new CategoryDAO();
+                  List<Category> categoryList = categoryDAO.getAllCategories();
+                  if (!categoryList.isEmpty()) {
+                    for (Category c : categoryList) {%>
+                <option value=<%=c.getId()%>><%=c.getName()%>
+                </option>
+                <%
+                    }
+                  }
+                %>
+              </select>
+              <label for="category">Category</label>
+              <div class="invalid-feedback" id="invalid-category"></div>
             </div>
             <button type="submit" class="btn btn-success float-end">Edit Competency</button>
           </form>
